@@ -1,11 +1,11 @@
 import Formation from "../Formation/Formation"
 
-function Formations({formas}) {
+function Formations ({formas}){
     return (
         <section>
             <h2>Formations</h2>
             {formas.map((forma)=>(
-                <Formation key={forma.id} {...forma} />
+                <Formation {...forma} key={forma.id}/>
             ))}
         </section>
     )

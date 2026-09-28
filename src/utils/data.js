@@ -17,14 +17,12 @@ export const dataExperiences = [
         date: "21/12/2000",
         poste: "menuisier",
         description: "j'ai fait du parquet"
-
     },
     {
         id:2,
         date: "21/12/2012",
         poste: "chomeur",
         description: "j'ai jouer a Rocket League"
-
     }
 ]
 

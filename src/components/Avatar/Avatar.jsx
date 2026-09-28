@@ -1,5 +1,5 @@
 
-function Avatar({alt, url}){
+function Avatar({ url, alt }) {
     return (
         <div>
             <img src={url} alt={alt} />
