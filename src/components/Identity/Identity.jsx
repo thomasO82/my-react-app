@@ -1,13 +1,18 @@
+import { useEffect } from "react"
 
-function Identity (){
+function Identity ({name, firstname, tel, address, email}){
+ 
+    return (
     <section>
+        <h2>Contact</h2>
         <ul>
-            <li>nom et prenom : Oliver Thomas</li>
-            <li>tel : 06060606</li>
-            <li>addresse : rue test 13000 Marseille</li>
-            <li>email : test@test.fr</li>
+            <li>nom et prenom : {name} {firstname}</li>
+            <li>tel : {tel}</li>
+            <li>addresse : {address}</li>
+            <li>email : {email}</li>
         </ul>
     </section>
+    )
 }
 
 export default Identity
