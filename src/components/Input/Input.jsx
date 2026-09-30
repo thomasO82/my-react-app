@@ -1,4 +1,4 @@
-function Input({ type, label, options = [], setValue }) {
+function Input({ name, error, type, label, options = [], register }) {
   return (
     <>
       {type === "radio" ?
@@ -7,18 +7,24 @@ function Input({ type, label, options = [], setValue }) {
           <legend>{label}</legend>
           {options.map((opt) => (
             <label htmlFor="" key={opt.value}>
-              <input type={type} value={opt.value} onChange={setValue} />
+              <input type={type} value={opt.value} {...register(name)}  />
               <span>{opt.name}</span>
             </label>
-
           ))}
+          {error &&
+            <span>{error.message}</span>
+          }
         </fieldset>
         :
         <div>
           <label htmlFor="">{label}</label>
-          <input type={type} onChange={setValue} />
+          <input type={type} {...register(name)}  />
+          {error &&
+            <span>{error.message}</span>
+          }
         </div>
       }
+
     </>
   );
 }

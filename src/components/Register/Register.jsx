@@ -1,44 +1,55 @@
 import { useState } from "react"
 import Input from "../Input/Input"
+import { fields } from "./fields"
 import Modal from "../Modal/Modal"
+import z from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import RegisterModalContent from "../RegisterModalContent/RegisterModalContent"
 
+const schema = z.object({
+    name: z.string().regex(/^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/, "le nom est invalide"),
+    civilitie: z.enum(["man", "woman", "other"], {
+        message: "choisir un champ valide"
+    }),
+    email: z.string().email("Entrez un mail valide"),
+    firstname: z.string().regex(/^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/, "le prenom est invalide"),
+    birthdate: z.string("Date invalide").date().refine(birthdate =>{
+        const limit = new Date()
+        limit.setFullYear(limit.getFullYear() - 18)
+        return new Date(birthdate) <= limit
+    }, "Vous devez etre majeur"),
+    postal_code: z.string().regex(/^\d{5}$/, " le code postal doit contenir 5 chiffres"),
+    city: z.string().regex(/^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/, "la ville est invalide")
+})
+
 const Register = () => {
-    const [civilitie, setCivilitie] = useState("")
-    const [name, setName] = useState("")
-    const [fname, setFname] = useState("")
-    const [email, setEmail] = useState("")
-    const [bdate, setbDate] = useState("")
-    const [zipcode, setZipcode] = useState("")
-    const [city, setCity] = useState("")
+
     const [isModalVisible, setIsModalVisible] = useState(false)
+    const [formData, setFormData] = useState({})
+
+    const {register, handleSubmit,
+        formState: {errors}
+    } = useForm({resolver: zodResolver(schema), mode: "onChange"})
 
 
-    function handleSubmit(e) {
-        e.preventDefault()
+    function openModal(data) {
+        setFormData(data)
         setIsModalVisible(true)
     }
 
-
     return (
         <section className="register">
-
-            <form className="register__form" onSubmit={(e)=>{handleSubmit(e)}}>
-                <Input type="radio" label="Civilité" setValue={(e)=>setCivilitie(e.target.value)} options={[{ name: "Homme", value: "man" }, { name: "Femme", value: "woman" }]} />
-                <Input type="text" label="Nom" setValue={(e)=>setName(e.target.value)} />
-                <Input type="text" label="Prenom" setValue={(e)=>setFname(e.target.value)} />
-                <Input type="text" label="Email" setValue={(e)=>setEmail(e.target.value)} />
-                <Input type="text" label="Date de naissance" setValue={(e)=>setbDate(e.target.value)} />
-                <Input type="text" label="Code postal" setValue={(e)=>setZipcode(e.target.value)} />
-                <Input type="text" label="Ville" setValue={(e)=>setCity(e.target.value)} />
-
+            <form className="register__form" onSubmit={handleSubmit(openModal)}>
+                {fields.map((field)=>(
+                    <Input error={errors[field.name]}  register={register} {...field} />
+                ))}
                 <button>Valider</button>
             </form>
-
             {
                 isModalVisible &&
-                <Modal  close={()=>setIsModalVisible(false)}>
-                    <RegisterModalContent civilitie={civilitie} name={name} />
+                <Modal close={() => setIsModalVisible(false)}>
+                    <RegisterModalContent {...formData}  />
 
                 </Modal>
             }
